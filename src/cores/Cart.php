@@ -10,7 +10,7 @@ class Cart implements CartInterface
 
   public function __construct(Storage $storage = null)
   {
-    $this->storage = $storage;
+    $this->storage = array();
   }
 
   public function add(ProductInterface $product = null)
@@ -18,6 +18,13 @@ class Cart implements CartInterface
     if (is_null($product)) {
       return false;
     }
+
+    $id = $product->getId();
+
+    $this->storage[$id] = array(
+      'item' => $product,
+      'quantity' => 1
+    );
 
     return true;
   }
@@ -28,6 +35,16 @@ class Cart implements CartInterface
       return false;
     }
 
+    $id = $product->getId();
+
+    $is_exist = array_key_exists($id, $this->storage);
+
+    if (false === $is_exist) {
+      return false;
+    }
+
+    unset($this->storage[$id]);
+    
     return true;
   }
 
@@ -35,4 +52,9 @@ class Cart implements CartInterface
   {
     return null;
   } 
+
+  public function count()
+  {
+    return 0;
+  }
 }
