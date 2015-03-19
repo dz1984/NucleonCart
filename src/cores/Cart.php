@@ -13,7 +13,7 @@ class Cart implements CartInterface
     $this->storage = array();
   }
 
-  public function add(ProductInterface $product = null)
+  public function add(ProductInterface $product = null, $quantity = 1)
   {
     if (is_null($product)) {
       return false;
@@ -23,7 +23,7 @@ class Cart implements CartInterface
 
     $this->storage[$id] = array(
       'item' => $product,
-      'quantity' => 1
+      'quantity' => $quantity
     );
 
     return true;
@@ -44,7 +44,7 @@ class Cart implements CartInterface
     }
 
     unset($this->storage[$id]);
-    
+
     return true;
   }
 
@@ -55,6 +55,10 @@ class Cart implements CartInterface
 
   public function count()
   {
-    return 0;
+    $count = 0;
+    foreach($this->storage as $item) {
+      $count += $item['quantity'];
+    }
+    return $count;
   }
 }

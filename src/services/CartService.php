@@ -30,4 +30,9 @@ class CartService
     // TODO : insert the business Logic
     return $this->cart->checkout();
   }
+
+  public function count($id = null)
+  {
+    return $this->cart->count($id);
+  }
 }

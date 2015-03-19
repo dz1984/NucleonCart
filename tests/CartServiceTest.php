@@ -20,6 +20,18 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     return new MockProduct($id, $price);
   }
 
+  private function _makeMockProductList($num = 10, $is_rand = true, $is_all_same = false)
+  {
+    $product_list = array();
+
+    for ($i=1; $i <= $num; $i++) {
+      $id = ($is_rand) ? rand() : $i;
+      $product_list[] = ($is_all_same) ? $this->_makeMockProduct() : $this->_makeMockProduct($id);
+    }
+
+    return $product_list;
+  }
+
   private function _makeCartInstance()
   {
     return new Cart();
@@ -69,6 +81,36 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     $this->assertTrue($result);
   }
 
+  public function testAddManyItemsReturnTrue()
+  {
+    $service = $this->_makeService();
+    $product_list = $this->_makeMockProductList();
+
+    $result = true;
+
+    foreach($product_list as $product) {
+      $result = ($result && $service->add($product));
+    }
+
+    $this->assertTrue($result);
+  }
+
+  public function testAddSameItemsReturnTrue()
+  {
+    $service = $this->_makeService();
+
+    $product_list = $this->_makeMockProductList($is_rand = false);
+
+    $result = true;
+
+    foreach($product_list as $product) {
+      $result = ($result && $service->add($product));
+    }
+
+    $this->assertTrue($result);
+
+  }
+
   public function testRemoveNullItemReturnFalse()
   {
     $service = $this->_makeExistOneItemService();
@@ -100,5 +142,32 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     $result = $service->remove($product);
 
     $this->assertTrue($result);
+  }
+
+  public function testCountReturnNumber()
+  {
+    $service = $this->_makeExistOneItemService();
+
+    $result = $service->count();
+
+    $this->assertTrue(is_numeric($result));
+    $this->assertGreaterThan(0, $result);
+  }
+
+  public function testCountSameItemsReturnAmount()
+  {
+    $service = $this->_makeService();
+
+    $product_list = $this->_makeMockProductList($num = 20, $is_all_same = true);
+
+    foreach($product_list as $product) {
+      $service->add($product);
+    }
+
+    $id = $product_list[0]->getId();
+
+    $result = $service->count($id);
+    $this->assertGreaterThan(0, $result);
+    $this->assertEquals(20, $result);
   }
 }
