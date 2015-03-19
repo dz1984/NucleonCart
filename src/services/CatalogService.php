@@ -1,7 +1,7 @@
 <?php
 namespace NucleonCart\Service;
 
-class ProductService 
+class CatalogService 
 {
   
 }
