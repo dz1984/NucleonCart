@@ -8,7 +8,7 @@ class Product implements ProductInterface
   protected $id;
   protected $price;
   
-  public function __construct($id, $price)
+  public function __construct($id = -1, $price = 0)
   {
     $this->id = $id;
     $this->price = $price;
