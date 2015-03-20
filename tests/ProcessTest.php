@@ -4,6 +4,7 @@ namespace NucleonCart\Test;
 use NucleonCart\Core\Cart;
 use NucleonCart\Service\CartService;
 use NucleonCart\Service\CatalogService;
+use NucleonCart\Service\CouponService;
 
 use PHPUnit_Framework_TestCase;
 
@@ -35,6 +36,7 @@ class ProcessTest extends PHPUnit_Framework_TestCase
   {
     self::$services['cart'] = new CartService(new Cart());
     self::$services['catalog'] = new CatalogService();
+    self::$services['coupon'] = new CouponService();
   }
 
   public static function setUpBeforeClass()
@@ -70,29 +72,37 @@ class ProcessTest extends PHPUnit_Framework_TestCase
    */
   public function testUseCoupon()
   {
+    $bill = $this->_getService('cart')->checkout();
+
     $this->assertTrue(true);
+
+    return $bill;
   }
 
   /**
    * @depends testUseCoupon
    */
-  public function testChoicePayment()
+  public function testChoicePayment($bill)
   {
     $this->assertTrue(true);
+
+    return $bill;
   }
 
   /**
    * @depends testChoicePayment
    */
-  public function testChoiceShipping()
+  public function testChoiceShipping($bill)
   {
     $this->assertTrue(true);
+
+    return $bill;
   }
 
   /**
    * @depends testChoiceShipping
    */
-  public function testCheckoutOrder()
+  public function testCheckoutOrder($bill)
   {
     $this->assertTrue(true);
   }

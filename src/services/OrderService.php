@@ -3,5 +3,4 @@ namespace NucleonCart\Service;
 
 class OrderService 
 {
-  
 }

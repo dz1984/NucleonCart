@@ -170,4 +170,13 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     $this->assertGreaterThan(0, $result);
     $this->assertEquals(20, $result);
   }
+
+  public function testCehckout()
+  {
+    $service = $this->_makeExistOneItemService();
+
+    $result = $service->checkout();
+
+    $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
+  }
 }

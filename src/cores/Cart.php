@@ -2,6 +2,7 @@
 namespace NucleonCart\Core;
 
 use NucleonCart\Core\ProductInterface; 
+use NucleonCart\Core\Order; 
 
 class Cart implements CartInterface
 {
@@ -50,7 +51,7 @@ class Cart implements CartInterface
 
   public function checkout()
   {
-    return null;
+    return new Bill;
   } 
 
   public function count()
