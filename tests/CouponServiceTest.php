@@ -3,103 +3,92 @@ namespace NucleonCart\Test;
 
 use NucleonCart\Core\Bill;
 use NucleonCart\Core\Coupon;
-
 use NucleonCart\Service\CouponService;
-
 use PHPUnit_Framework_TestCase;
 
 class CouponServiceTest extends PHPUnit_Framework_TestCase
 {
-  private function _makeBill()
-  {
-    return new Bill;
-  }
+    protected $service;
 
-  private function _makeCoupon()
-  {
-    return new Coupon;
-  }
-  private function _makeService()
-  {
-    return new CouponService();
-  }
+    public function testInitial()
+    {
+        $this->assertInstanceOf('NucleonCart\Service\CouponService', $this->service);
+    }
 
-  public function testInitial()
-  {
-    $service = $this->_makeService();
+    public function testFindNoIdReturnFalse()
+    {
+        $result = $this->service->findById();
 
-    $this->assertInstanceOf('NucleonCart\Service\CouponService', $service);
-  }
+        $this->assertFalse($result);
+    }
 
-  public function testFindNoIdReturnFalse()
-  {
-    $service = $this->_makeService();
+    public function testFindByIdReturnCoupon()
+    {
+        $result = $this->service->findById(1);
 
-    $result = $service->findById();
+        $this->assertInstanceOf('NucleonCart\Core\Coupon', $result);
+    }
 
-    $this->assertFalse($result);
-  }
+    public function testFIndValidCouponsReturnArray()
+    {
+        $result = $this->service->findValidCoupons();
 
-  public function testFindByIdReturnCoupon()
-  {
-    $service = $this->_makeService();
+        $this->assertTrue(is_array($result));
+    }
 
-    $result = $service->findById(1);
+    public function testApplyNullBillReturnFalse()
+    {
+        $coupon = $this->_makeCoupon();
 
-    $this->assertInstanceOf('NucleonCart\Core\Coupon', $result);
-  }
+        $result = $this->service->apply(null, $coupon);
 
-  public function testFIndValidCouponsReturnArray()
-  {
-    $service = $this->_makeService();
+        $this->assertFalse($result);
+    }
 
-    $result = $service->findValidCoupons();
+    private function _makeCoupon()
+    {
+        return new Coupon;
+    }
 
-    $this->assertTrue(is_array($result));
-  }
+    public function testApplyNullCouponReturnFalse()
+    {
+        $bill = $this->_makeBill();
 
-  public function testApplyNullBillReturnFalse()
-  {
-    $service = $this->_makeService();
+        $result = $this->service->apply($bill, null);
 
-    $coupon = $this->_makeCoupon();
+        $this->assertFalse($result);
 
-    $result = $service->apply(null, $coupon);
+    }
 
-    $this->assertFalse($result);
-  }
+    private function _makeBill()
+    {
+        return new Bill;
+    }
 
-  public function testApplyNullCouponReturnFalse()
-  {
-    $service = $this->_makeService();
+    public function testApplyBothNullReturnFalse()
+    {
+        $result = $this->service->apply(null, null);
 
-    $bill = $this->_makeBill();
+        $this->assertFalse($result);
+    }
 
-    $result = $service->apply($bill, null);
+    public function testApplyReturnTrue()
+    {
+        $bill = $this->_makeBill();
+        $coupon = $this->_makeCoupon();
 
-    $this->assertFalse($result);
+        $result = $this->service->apply($bill, $coupon);
 
-  }
+        $this->assertTrue($result);
+    }
 
-  public function testApplyBothNullReturnFalse()
-  {
+    protected function setUp()
+    {
+        $this->service = $this->_makeService();
+    }
 
-    $service = $this->_makeService();
-
-    $result = $service->apply(null, null);
-
-    $this->assertFalse($result);
-  }
-
-  public function testApplyReturnTrue()
-  {
-    $service = $this->_makeService();
-
-    $bill = $this->_makeBill();
-    $coupon = $this->_makeCoupon();
-
-    $result = $service->apply($bill, $coupon);
-
-    $this->assertTrue($result);
-  }
+    private function _makeService()
+    {
+        return new CouponService();
+    }
 }

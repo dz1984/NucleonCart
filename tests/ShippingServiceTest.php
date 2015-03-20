@@ -3,77 +3,71 @@ namespace NucleonCart\Test;
 
 use NucleonCart\Core\Bill;
 use NucleonCart\Core\Shipping;
-
 use NucleonCart\Service\ShippingService;
-
 use PHPUnit_Framework_TestCase;
 
 class ShippingServiceTest extends PHPUnit_Framework_TestCase
 {
-  private function _makeBill()
-  {
-    return new Bill;
-  }
+    protected $service;
 
-  private function _makeShipping()
-  {
-    return new Shipping;
-  }
+    public function testInitial()
+    {
+        $this->assertInstanceOf('NucleonCart\Service\ShippingService', $this->service);
+    }
 
-  private function _makeService()
-  {
-    return new ShippingService();
-  }
+    public function testApplyNullBillReturnFalse()
+    {
+        $shipping = $this->_makeShipping();
 
-  public function testInitial()
-  {
-    $service = $this->_makeService();
+        $result = $this->service->apply(null, $shipping);
 
-    $this->assertInstanceOf('NucleonCart\Service\ShippingService', $service);
-  }
+        $this->assertFalse($result);
+    }
 
-  public function testApplyNullBillReturnFalse()
-  {
-    $service = $this->_makeService();
+    private function _makeShipping()
+    {
+        return new Shipping;
+    }
 
-    $shipping = $this->_makeShipping();
+    public function testApplyNullShippingReturnFalse()
+    {
+        $bill = $this->_makeBill();
 
-    $result = $service->apply(null, $shipping);
+        $result = $this->service->apply($bill, null);
 
-    $this->assertFalse($result);
-  }
+        $this->assertFalse($result);
 
-  public function testApplyNullShippingReturnFalse()
-  {
-    $service = $this->_makeService();
+    }
 
-    $bill = $this->_makeBill();
+    private function _makeBill()
+    {
+        return new Bill;
+    }
 
-    $result = $service->apply($bill, null);
+    public function testApplyBothNullReturnFalse()
+    {
+        $result = $this->service->apply(null, null);
 
-    $this->assertFalse($result);
+        $this->assertFalse($result);
+    }
 
-  }
+    public function testApplyReturnTrue()
+    {
+        $bill = $this->_makeBill();
+        $shipping = $this->_makeShipping();
 
-  public function testApplyBothNullReturnFalse()
-  {
+        $result = $this->service->apply($bill, $shipping);
 
-    $service = $this->_makeService();
+        $this->assertTrue($result);
+    }
 
-    $result = $service->apply(null, null);
+    protected function setUp()
+    {
+        $this->service = $this->_makeService();
+    }
 
-    $this->assertFalse($result);
-  }
-
-  public function testApplyReturnTrue()
-  {
-    $service = $this->_makeService();
-
-    $bill = $this->_makeBill();
-    $shipping = $this->_makeShipping();
-
-    $result = $service->apply($bill, $shipping);
-
-    $this->assertTrue($result);
-  }
+    private function _makeService()
+    {
+        return new ShippingService();
+    }
 }

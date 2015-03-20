@@ -6,34 +6,34 @@ use PHPUnit_Framework_TestCase;
 
 class CatalogServiceTest extends PHPUnit_Framework_TestCase
 {
-  
-  private function _makeService()
-  {
-    return new CatalogService();
-  }
+    protected $service;
 
-  public function testInitial()
-  {
-    $service = $this->_makeService();
+    public function testInitial()
+    {
+        $this->assertInstanceOf('NucleonCart\Service\CatalogService', $this->service);
+    }
 
-    $this->assertInstanceOf('NucleonCart\Service\CatalogService', $service);
-  }
+    public function testFindNoIdReturnNull()
+    {
+        $result = $this->service->findProductById(null);
 
-  public function testFindNoIdReturnNull()
-  {
-    $service = $this->_makeService();
+        $this->assertTrue(is_null($result));
+    }
 
-    $result = $service->findProductById(null);
+    public function testFindByIdReturnProduct()
+    {
+        $result = $this->service->findProductById(1);
 
-    $this->assertTrue(is_null($result));
-  }
+        $this->assertInstanceOf('NucleonCart\Core\Product', $result);
+    }
 
-  public function testFindByIdReturnProduct()
-  {
-    $service = $this->_makeService();
+    protected function setUp()
+    {
+        $this->service = $this->_makeService();
+    }
 
-    $result = $service->findProductById(1);
-
-    $this->assertInstanceOf('NucleonCart\Core\Product', $result);
-  }
+    private function _makeService()
+    {
+        return new CatalogService();
+    }
 }

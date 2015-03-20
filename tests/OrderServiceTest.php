@@ -6,16 +6,20 @@ use PHPUnit_Framework_TestCase;
 
 class OrderServiceTest extends PHPUnit_Framework_TestCase
 {
-  
-  private function _makeService()
-  {
-    return new OrderService();
-  }
+    protected $service;
 
-  public function testInitial()
-  {
-    $service = $this->_makeService();
+    public function testInitial()
+    {
+        $this->assertInstanceOf('NucleonCart\Service\OrderService', $this->service);
+    }
 
-    $this->assertInstanceOf('NucleonCart\Service\OrderService', $service);
-  }
+    protected function setUp()
+    {
+        $this->service = $this->_makeService();
+    }
+
+    private function _makeService()
+    {
+        return new OrderService();
+    }
 }
