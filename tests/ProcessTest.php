@@ -16,34 +16,84 @@ use PHPUnit_Framework_TestCase;
 class ProcessTest extends PHPUnit_Framework_TestCase
 {
 
-  private $services = array();
+  protected static $services = array();
 
-  private function _initService()
+  private function _getService($service_name = null)
   {
-    $this->services['cart'] = new CartService(new Cart());
-    $this->services['catalog'] = new CatalogService();
+    if (is_null($service_name)) {
+      return self::$services;
+    }
+
+    if (array_key_exists($service_name, self::$services)) {
+      return self::$services[$service_name];
+    }
+
+    return false;
   }
 
-  public function setUp()
+  private static function _initService()
   {
-    $this->_initService();
+    self::$services['cart'] = new CartService(new Cart());
+    self::$services['catalog'] = new CatalogService();
   }
 
-  public function testInitail()
+  public static function setUpBeforeClass()
   {
-    $this->assertTrue(is_array($this->services));
-    $this->assertInstanceOf('NucleonCart\Service\CartService', $this->services['cart']);
-    $this->assertInstanceOf('NucleonCart\Service\CatalogService', $this->services['catalog']);
+    self::_initService();
   }
 
+  public function testInitial()
+  {
+    $this->assertTrue(is_array($this->_getService()));
+    $this->assertInstanceOf('NucleonCart\Service\CartService', $this->_getService('cart'));
+    $this->assertInstanceOf('NucleonCart\Service\CatalogService',$this->_getService('catalog'));
+  }
+
+  /**
+   * @depends testInitial
+   * @return [type] [description]
+   */
   public function testAddItem()
   {
-    $product = $this->services['catalog']
+    $product = $this->_getService('catalog')
                     ->findProductById(1);
 
-    $this->services['cart']->add($product);
+    $this->_getService('cart')->add($product);
 
-    $result = $this->services['cart']->count();
+    $result = $this->_getService('cart')->count();
     $this->assertEquals(1, $result);
+  }
+
+  /**
+   * @depends testAddItem
+   * @return [type] [description]
+   */
+  public function testUseCoupon()
+  {
+    $this->assertTrue(true);
+  }
+
+  /**
+   * @depends testUseCoupon
+   */
+  public function testChoicePayment()
+  {
+    $this->assertTrue(true);
+  }
+
+  /**
+   * @depends testChoicePayment
+   */
+  public function testChoiceShipping()
+  {
+    $this->assertTrue(true);
+  }
+
+  /**
+   * @depends testChoiceShipping
+   */
+  public function testCheckoutOrder()
+  {
+    $this->assertTrue(true);
   }
 }
