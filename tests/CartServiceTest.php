@@ -15,13 +15,12 @@ class MockProduct extends Product
 class CartServiceTest extends PHPUnit_Framework_TestCase
 {
 
-    protected $has_item_service;
-    protected $service;
+    protected $services = array();
 
     protected function setUp()
     {
-        $this->service = $this->_makeService();
-        $this->has_item_service = $this->_makeExistOneItemService();
+        $this->services['default'] = $this->_makeService();
+        $this->services['has_item'] = $this->_makeExistOneItemService();
     }
 
     private function _makeService()
@@ -52,15 +51,24 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
         return new MockProduct($id, $price);
     }
 
+    private function _getService($has_item = false)
+    {
+        if ($has_item) {
+            return $this->services['has_item'];
+        }
+
+        return $this->services['default'];
+    }
+
     public function testInitial()
     {
-        $this->assertInstanceOf('NucleonCart\Service\CartService', $this->service);
-        $this->assertInstanceOf('NucleonCart\Service\CartService', $this->has_item_service);
+        $this->assertInstanceOf('NucleonCart\Service\CartService', $this->_getService());
+        $this->assertInstanceOf('NucleonCart\Service\CartService', $this->_getService($has_item=true));
     }
 
     public function testAddItemReturnFalse()
     {
-        $result = $this->service->add();
+        $result = $this->_getService()->add();
 
         $this->assertFalse($result);
     }
@@ -69,7 +77,7 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     {
         $product = $this->_makeMockProduct();
 
-        $result = $this->service->add($product);
+        $result = $this->_getService()->add($product);
 
         $this->assertTrue($result);
     }
@@ -81,7 +89,7 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
         $result = true;
 
         foreach ($product_list as $product) {
-            $result = ($result && $this->service->add($product));
+            $result = ($result && $this->_getService()->add($product));
         }
 
         $this->assertTrue($result);
@@ -106,7 +114,7 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
         $result = true;
 
         foreach ($product_list as $product) {
-            $result = ($result && $this->service->add($product));
+            $result = ($result && $this->_getService()->add($product));
         }
 
         $this->assertTrue($result);
@@ -114,7 +122,7 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveNullItemReturnFalse()
     {
-        $result = $this->has_item_service->remove();
+        $result = $this->_getService($has_item=true)->remove();
 
         $this->assertFalse($result);
     }
@@ -123,7 +131,7 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     {
         $another_product = $this->_makeMockProduct(2, 100);
 
-        $result = $this->has_item_service->remove($another_product);
+        $result = $this->_getService($has_item=true)->remove($another_product);
 
         $this->assertFalse($result);
     }
@@ -132,16 +140,16 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
     {
         $product = $this->_makeMockProduct();
 
-        $this->service->add($product);
+        $this->_getService()->add($product);
 
-        $result = $this->service->remove($product);
+        $result = $this->_getService()->remove($product);
 
         $this->assertTrue($result);
     }
 
     public function testCountReturnNumber()
     {
-        $result = $this->has_item_service->count();
+        $result = $this->_getService($has_item=true)->count();
 
         $this->assertTrue(is_numeric($result));
         $this->assertGreaterThan(0, $result);
@@ -152,19 +160,19 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
         $product_list = $this->_makeMockProductList($num = 20, $is_all_same = true);
 
         foreach ($product_list as $product) {
-            $this->service->add($product);
+            $this->_getService()->add($product);
         }
 
         $id = $product_list[0]->getId();
 
-        $result = $this->service->count($id);
+        $result = $this->_getService()->count($id);
         $this->assertGreaterThan(0, $result);
         $this->assertEquals(20, $result);
     }
 
     public function testCheckout()
     {
-        $result = $this->has_item_service->checkout();
+        $result = $this->_getService($has_item=true)->checkout();
 
         $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
     }
