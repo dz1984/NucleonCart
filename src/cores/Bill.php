@@ -1,25 +1,45 @@
 <?php
 namespace NucleonCart\Core;
 
-use NucleonCart\Core\BillInterface;
-
 class Bill implements BillInterface
 {
-  protected $coupon = array();
+    protected $total = 0;
+    protected $coupon = array();
 
-  public function setCoupon(CouponInterface $coupon = null)
-  {
-    if (is_null($coupon)) {
-      return false;
+    public function setCoupon(CouponInterface $coupon = null)
+    {
+        if (is_null($coupon)) {
+            return false;
+        }
+
+        $this->coupon[] = $coupon;
+
+        return true;
     }
 
-    $this->coupon[] = $coupon;
-    
-    return true;
-  }
+    public function getCoupon()
+    {
+        return $this->coupon;
+    }
 
-  public function setShipping()
-  {
+    public function setTotal($total = null)
+    {
+        if (is_null($total)) {
+            return false;
+        }
 
-  }
+        $this->total = $total;
+
+        return true;
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    public function setShipping()
+    {
+
+    }
 }

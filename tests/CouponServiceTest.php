@@ -55,6 +55,17 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
         return new Coupon;
     }
 
+    private function _makeCouponList($num = 10)
+    {
+        $coupon_list = array();
+
+        for ($i = 0; $i < $num; $i++) {
+            $coupon_list[] = $this->_makeCoupon();
+        }
+
+        return $coupon_list;
+    }
+
     public function testApplyNullCouponReturnFalse()
     {
         $bill = $this->_makeBill();
@@ -95,5 +106,24 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
     private function _makeService()
     {
         return new CouponService();
+    }
+
+    public function testApplyCouponListReturnTrue()
+    {
+        $bill = $this->_makeBill();
+        $coupon_list = $this->_makeCouponList();
+
+        $result = $this->_getService()->apply($bill, $coupon_list);
+
+        $this->assertTrue($result);
+    }
+
+    public function testIsValidNullCouponReturnFalse()
+    {
+        $bill = $this->_makeBill();
+
+        $result = $this->_getService()->isValidCoupon($bill, null);
+
+        $this->assertFalse($result);
     }
 }
