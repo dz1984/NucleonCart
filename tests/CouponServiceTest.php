@@ -8,30 +8,35 @@ use PHPUnit_Framework_TestCase;
 
 class CouponServiceTest extends PHPUnit_Framework_TestCase
 {
-    protected $service;
+    protected $services;
+
+    private function _getService()
+    {
+        return $this->services['default'];
+    }
 
     public function testInitial()
     {
-        $this->assertInstanceOf('NucleonCart\Service\CouponService', $this->service);
+        $this->assertInstanceOf('NucleonCart\Service\CouponService', $this->_getService());
     }
 
     public function testFindNoIdReturnFalse()
     {
-        $result = $this->service->findById();
+        $result = $this->_getService()->findById();
 
         $this->assertFalse($result);
     }
 
     public function testFindByIdReturnCoupon()
     {
-        $result = $this->service->findById(1);
+        $result = $this->_getService()->findById(1);
 
         $this->assertInstanceOf('NucleonCart\Core\Coupon', $result);
     }
 
     public function testFIndValidCouponsReturnArray()
     {
-        $result = $this->service->findValidCoupons();
+        $result = $this->_getService()->findValidCoupons();
 
         $this->assertTrue(is_array($result));
     }
@@ -40,7 +45,7 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
     {
         $coupon = $this->_makeCoupon();
 
-        $result = $this->service->apply(null, $coupon);
+        $result = $this->_getService()->apply(null, $coupon);
 
         $this->assertFalse($result);
     }
@@ -54,7 +59,7 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
     {
         $bill = $this->_makeBill();
 
-        $result = $this->service->apply($bill, null);
+        $result = $this->_getService()->apply($bill, null);
 
         $this->assertFalse($result);
 
@@ -67,7 +72,7 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
 
     public function testApplyBothNullReturnFalse()
     {
-        $result = $this->service->apply(null, null);
+        $result = $this->_getService()->apply(null, null);
 
         $this->assertFalse($result);
     }
@@ -77,14 +82,14 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
         $bill = $this->_makeBill();
         $coupon = $this->_makeCoupon();
 
-        $result = $this->service->apply($bill, $coupon);
+        $result = $this->_getService()->apply($bill, $coupon);
 
         $this->assertTrue($result);
     }
 
     protected function setUp()
     {
-        $this->service = $this->_makeService();
+        $this->services['default'] = $this->_makeService();
     }
 
     private function _makeService()

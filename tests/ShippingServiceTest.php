@@ -8,18 +8,23 @@ use PHPUnit_Framework_TestCase;
 
 class ShippingServiceTest extends PHPUnit_Framework_TestCase
 {
-    protected $service;
+    protected $services = array();
+
+    private function _getService()
+    {
+        return $this->services['default'];
+    }
 
     public function testInitial()
     {
-        $this->assertInstanceOf('NucleonCart\Service\ShippingService', $this->service);
+        $this->assertInstanceOf('NucleonCart\Service\ShippingService', $this->_getService());
     }
 
     public function testApplyNullBillReturnFalse()
     {
         $shipping = $this->_makeShipping();
 
-        $result = $this->service->apply(null, $shipping);
+        $result = $this->_getService()->apply(null, $shipping);
 
         $this->assertFalse($result);
     }
@@ -33,7 +38,7 @@ class ShippingServiceTest extends PHPUnit_Framework_TestCase
     {
         $bill = $this->_makeBill();
 
-        $result = $this->service->apply($bill, null);
+        $result = $this->_getService()->apply($bill, null);
 
         $this->assertFalse($result);
 
@@ -46,7 +51,7 @@ class ShippingServiceTest extends PHPUnit_Framework_TestCase
 
     public function testApplyBothNullReturnFalse()
     {
-        $result = $this->service->apply(null, null);
+        $result = $this->_getService()->apply(null, null);
 
         $this->assertFalse($result);
     }
@@ -56,14 +61,14 @@ class ShippingServiceTest extends PHPUnit_Framework_TestCase
         $bill = $this->_makeBill();
         $shipping = $this->_makeShipping();
 
-        $result = $this->service->apply($bill, $shipping);
+        $result = $this->_getService()->apply($bill, $shipping);
 
         $this->assertTrue($result);
     }
 
     protected function setUp()
     {
-        $this->service = $this->_makeService();
+        $this->services['default'] = $this->_makeService();
     }
 
     private function _makeService()
