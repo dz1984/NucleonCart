@@ -88,6 +88,27 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
+    public function testApplyNonArrayCouponReturnFalse()
+    {
+        $bill = $this->_makeBill();
+
+        $result = $this->_getService()->apply($bill, 'Non Array');
+
+        $this->assertFalse($result);
+    }
+
+    public function testApplyPassOneNullCouponsReturnTrue()
+    {
+        $bill = $this->_makeBill();
+
+        $coupon_list = $this->_makeCouponList();
+
+        $coupon_list[] = null;
+
+        $result = $this->_getService()->apply($bill, $coupon_list);
+
+        $this->assertTrue($result);
+    }
     public function testApplyReturnTrue()
     {
         $bill = $this->_makeBill();

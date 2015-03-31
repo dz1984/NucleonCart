@@ -8,10 +8,6 @@ use NucleonCart\Core\CouponInterface;
 class CouponService
 {
 
-    public function _construct()
-    {
-    }
-
     public function findById($id = null)
     {
         if (is_null($id)) {
