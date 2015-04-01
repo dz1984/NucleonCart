@@ -50,7 +50,7 @@ class CouponService
             $bill->setCoupon($coupon);
         }
 
-        return true;
+        return $bill;
     }
 
     private function _isNull($bill, $coupon)

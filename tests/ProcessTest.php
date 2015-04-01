@@ -5,6 +5,7 @@ use NucleonCart\Core\Cart;
 use NucleonCart\Service\CartService;
 use NucleonCart\Service\CatalogService;
 use NucleonCart\Service\CouponService;
+use NucleonCart\Service\PaymentService;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -36,6 +37,7 @@ class ProcessTest extends PHPUnit_Framework_TestCase
         self::$services['cart'] = new CartService(new Cart());
         self::$services['catalog'] = new CatalogService();
         self::$services['coupon'] = new CouponService();
+        self::$services['payment'] = new PaymentService();
     }
 
     public static function setUpBeforeClass()
@@ -49,6 +51,7 @@ class ProcessTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('NucleonCart\Service\CartService', $this->_getService('cart'));
         $this->assertInstanceOf('NucleonCart\Service\CatalogService', $this->_getService('catalog'));
         $this->assertInstanceOf('NucleonCart\Service\CouponService', $this->_getService('coupon'));
+        $this->assertInstanceOf('NucleonCart\Service\PaymentService', $this->_getService('payment'));
     }
 
     /**
@@ -80,9 +83,9 @@ class ProcessTest extends PHPUnit_Framework_TestCase
 
         $result = $this->_getService('coupon')->apply($bill, $coupon);
 
-        $this->assertTrue($result);
+        $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
 
-        return $bill;
+        return $result;
     }
 
     /**
@@ -90,9 +93,13 @@ class ProcessTest extends PHPUnit_Framework_TestCase
      */
     public function testChoicePayment($bill)
     {
-        $this->assertTrue(true);
+        $payment = $this->_getService('payment')->findByName('cash');
 
-        return $bill;
+        $result = $this->_getService('payment')->apply($bill, $payment);
+
+        $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
+
+        return $result;
     }
 
     /**

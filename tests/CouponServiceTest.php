@@ -20,7 +20,7 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('NucleonCart\Service\CouponService', $this->_getService());
     }
 
-    public function testFindNoIdReturnFalse()
+    public function testFindNullIdReturnFalse()
     {
         $result = $this->_getService()->findById();
 
@@ -97,7 +97,7 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function testApplyPassOneNullCouponsReturnTrue()
+    public function testApplyPassOneNullCouponsReturnBill()
     {
         $bill = $this->_makeBill();
 
@@ -107,16 +107,17 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->_getService()->apply($bill, $coupon_list);
 
-        $this->assertTrue($result);
+        $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
     }
-    public function testApplyReturnTrue()
+
+    public function testApplyReturnBill()
     {
         $bill = $this->_makeBill();
         $coupon = $this->_makeCoupon();
 
         $result = $this->_getService()->apply($bill, $coupon);
 
-        $this->assertTrue($result);
+        $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
     }
 
     protected function setUp()
@@ -129,14 +130,14 @@ class CouponServiceTest extends PHPUnit_Framework_TestCase
         return new CouponService();
     }
 
-    public function testApplyCouponListReturnTrue()
+    public function testApplyCouponListReturnBill()
     {
         $bill = $this->_makeBill();
         $coupon_list = $this->_makeCouponList();
 
         $result = $this->_getService()->apply($bill, $coupon_list);
 
-        $this->assertTrue($result);
+        $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
     }
 
     public function testIsValidNullCouponReturnFalse()
