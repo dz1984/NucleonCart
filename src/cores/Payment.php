@@ -15,4 +15,11 @@ class Payment implements PaymentInterface
     {
         return $this->name;
     }
+
+    public function apply(BillInterface $bill)
+    {
+        $bill->setPayment($this);
+        
+        return $bill;
+    }
 }

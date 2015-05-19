@@ -22,4 +22,16 @@ class Coupon implements CouponInterface
   {
     return $this->discount_price;
   }
+
+  public function apply(BillInterface $bill)
+  {
+    // TODO : calculate discount on this coupon
+    $discount_price = $this->getDiscountPrice();
+    $total = $bill->getTotal() - $discount_price;
+
+    $bill->setTotal($total);
+    $bill->setCoupon($this);
+
+    return $bill;
+  }
 }

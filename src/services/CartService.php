@@ -35,4 +35,5 @@ class CartService
   {
     return $this->cart->count($id);
   }
+
 }

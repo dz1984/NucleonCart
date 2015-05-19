@@ -29,7 +29,7 @@ class PaymentService
             return false;
         }
 
-        return $bill;
+        return $payment->apply($bill);
     }
 
     public function isValidPayment(BillInterface $bill = null, PaymentInterface $payment = null)

@@ -42,12 +42,8 @@ class CouponService
             if (!$is_valid_coupon) {
                 continue;
             }
-            // TODO : calculate discount on this coupon
-            $discount_price = $coupon->getDiscountPrice();
-            $total = $bill->getTotal() - $discount_price;
 
-            $bill->setTotal($total);
-            $bill->setCoupon($coupon);
+            $bill = $coupon->apply($bill);
         }
 
         return $bill;

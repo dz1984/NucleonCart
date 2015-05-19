@@ -172,7 +172,7 @@ class CartServiceTest extends PHPUnit_Framework_TestCase
 
     public function testCheckout()
     {
-        $result = $this->_getService($has_item=true)->checkout();
+        $result = $this->_getService($has_item = true)->checkout();
 
         $this->assertInstanceOf('NucleonCart\Core\Bill', $result);
     }

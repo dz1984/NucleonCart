@@ -51,15 +51,28 @@ class Cart implements CartInterface
 
   public function checkout()
   {
-    return new Bill;
+    return new Bill($this->total());
   } 
 
   public function count()
   {
     $count = 0;
+
     foreach($this->storage as $item) {
       $count += $item['quantity'];
     }
     return $count;
+  }
+
+  public function total()
+  {
+    $total = 0.0;
+
+    foreach($this->storage as $item) {
+      $product = $item['item'];
+      $total += $product->getPrice() * $item['quantity'];
+    }
+
+    return $total;
   }
 }
